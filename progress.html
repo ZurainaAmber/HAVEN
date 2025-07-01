@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Progress Tracker 📈 | Haven</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fefdf8;
+      margin: 0;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #4e6e5d;
+      margin-bottom: 1rem;
+    }
+
+    #menu {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #ffffffcc;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #menu a {
+      display: block;
+      color: #2e5c4d;
+      text-decoration: none;
+      padding: 0.2rem 0;
+    }
+
+    #menu a:hover {
+      text-decoration: underline;
+    }
+
+    canvas {
+      max-width: 600px;
+      margin: 2rem auto;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu">
+    <strong>Menu</strong>
+    <a href="journal.html">📓 Journal</a>
+    <a href="progress.html">📈 Progress</a>
+    <a href="garden.html">🌸 Garden</a>
+    <a href="game.html">🫧 Bubbles</a>
+    <a href="stack.html">🧱 Stack</a>
+    <a href="moodmate.html">🧠 MoodMate</a>
+    <a href="index.html">🚪 Log Out</a>
+  </div>
+
+  <h1>Your Progress Tracker</h1>
+  <canvas id="progressChart" width="600" height="400"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Simulate journal streak data for display
+    function getStreakData() {
+      const keys = Object.keys(localStorage).filter(k => k.startsWith("haven-journal-"));
+      const dates = keys.map(k => new Date(k.replace("haven-journal-", "")));
+
+      const counts = {};
+      dates.forEach(date => {
+        const day = date.toISOString().split("T")[0];
+        counts[day] = (counts[day] || 0) + 1;
+      });
+
+      const sortedDays = Object.keys(counts).sort();
+      const values = sortedDays.map(day => counts[day]);
+
+      return { labels: sortedDays, data: values };
+    }
+
+    const { labels, data } = getStreakData();
+
+    const ctx = document.getElementById("progressChart").getContext("2d");
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Journal Entries per Day',
+          data,
+          backgroundColor: '#b2d8c8',
+          borderRadius: 8
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

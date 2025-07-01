@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Haven – Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Patrick Hand', cursive;
+      background: url('app background.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-box {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem;
+      border-radius: 24px;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 300px;
+      width: 100%;
+    }
+
+    h2 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #f5ba8c;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #f2a66f;
+    }
+
+    .error {
+      color: #d9534f;
+      font-size: 0.9rem;
+    }
+      .fade-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('app background.png') no-repeat center center fixed;
+      background-size: cover;
+      z-index: 10;
+      opacity: 1;
+      transition: opacity 2s ease-in-out;
+    }
+
+    .fade-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+ textarea {
+      background: repeating-linear-gradient(
+        to bottom,
+        #fffdf9,
+        #fffdf9 28px,
+        #e6e6e6 29px,
+        #fffdf9 30px
+      );
+      line-height: 30px;
+      font-family: 'Patrick Hand', cursive;
+      padding: 1rem;
+      border: 2px dashed #ddd;
+      border-radius: 16px;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Enter Haven</h2>
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+    <button onclick="login()">Begin Check-In</button>
+    <div class="error" id="errorMsg"></div>
+  </div>
+
+  <script>
+    const users = JSON.parse(localStorage.getItem("haven-users")) || {};
+
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorBox = document.getElementById("errorMsg");
+
+      if (!username || !password) {
+        errorBox.innerText = "Please enter both fields.";
+        return;
+      }
+
+      // Check if user exists
+      if (!users[username]) {
+        users[username] = password; // create new user
+        localStorage.setItem("haven-users", JSON.stringify(users));
+        localStorage.setItem("haven-logged-in", username);
+        window.location.href = "journal.html";
+      } else if (users[username] === password) {
+        localStorage.setItem("haven-logged-in", username);
+        window.location.href = "journal.html";
+      } else {
+        errorBox.innerText = "Incorrect password.";
+      }
+    }
+  </script>
+</body>
+</html>

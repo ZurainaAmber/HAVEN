@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pop the Stress Bubbles 🪨 | Haven</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: linear-gradient(to top, #fefcf8, #d4ede6);
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    canvas {
+      display: block;
+    }
+
+    #score {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: #ffffffdd;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-size: 1.2rem;
+      color: #333;
+      box-shadow: 2px 4px 8px rgba(0,0,0,0.1);
+    }
+
+    #back {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #ffffffdd;
+      padding: 8px 14px;
+      font-size: 1rem;
+      border-radius: 16px;
+      color: #2e5c4d;
+      text-decoration: none;
+      box-shadow: 1px 3px 6px rgba(0,0,0,0.1);
+    }
+
+    #back:hover {
+      background: #ecf9f3;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bubbleCanvas"></canvas>
+  <div id="score">🪨 Bubbles Popped: 0</div>
+  <a id="back" href="journal.html">← Back to Journal</a>
+
+  <script>
+    const canvas = document.getElementById('bubbleCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let bubbles = [];
+    let popped = 0;
+    const scoreDisplay = document.getElementById('score');
+
+    class Bubble {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + 60;
+        this.radius = 30 + Math.random() * 20;
+        this.speed = 1 + Math.random() * 1.5;
+        this.opacity = 0.3 + Math.random() * 0.4;
+        this.color = `rgba(180, 220, 240, ${this.opacity})`;
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
+
+      move() {
+        this.y -= this.speed;
+      }
+    }
+
+    function spawnBubble() {
+      bubbles.push(new Bubble());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      bubbles.forEach((bubble, i) => {
+        bubble.move();
+        bubble.draw();
+        if (bubble.y + bubble.radius < 0) {
+          bubbles.splice(i, 1);
+        }
+      });
+      requestAnimationFrame(animate);
+    }
+
+    canvas.addEventListener('click', function(e) {
+      for (let i = 0; i < bubbles.length; i++) {
+        const b = bubbles[i];
+        const dx = e.clientX - b.x;
+        const dy = e.clientY - b.y;
+        if (dx * dx + dy * dy < b.radius * b.radius) {
+          bubbles.splice(i, 1);
+          popped++;
+          scoreDisplay.innerText = `🪨 Bubbles Popped: ${popped}`;
+          break;
+        }
+      }
+    });
+
+    setInterval(spawnBubble, 700);
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>

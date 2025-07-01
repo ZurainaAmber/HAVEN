@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MoodMate 🧠 | Haven</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fefdf8;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #4e6e5d;
+      margin-bottom: 1rem;
+    }
+
+    textarea {
+      width: 100%;
+      max-width: 500px;
+      height: 150px;
+      padding: 1rem;
+      border-radius: 16px;
+      border: 2px dashed #ccc;
+      background: #fffefc;
+      font-size: 1rem;
+      resize: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background: #b2d8c8;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #9ccab3;
+    }
+
+    #output {
+      margin-top: 2rem;
+      max-width: 600px;
+      background: #ffffffee;
+      padding: 1.2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .suggestion {
+      margin: 0.5rem 0;
+    }
+
+    #menu {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #ffffffcc;
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #menu a {
+      display: block;
+      color: #2e5c4d;
+      text-decoration: none;
+      padding: 0.2rem 0;
+    }
+
+    #menu a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div id="menu">
+    <strong>Menu</strong>
+    <a href="journal.html">📓 Journal</a>
+    <a href="progress.html">📈 Progress</a>
+    <a href="garden.html">🌸 Garden</a>
+    <a href="game.html">🫧 Bubbles</a>
+    <a href="stack.html">🧱 Stack</a>
+    <a href="moodmate.html">🧠 MoodMate</a>
+    <a href="index.html">🚪 Log Out</a>
+  </div>
+
+  <h1>MoodMate 🧠</h1>
+  <textarea id="moodInput" placeholder="Paste your journal entry here or write how you feel..."></textarea>
+  <button onclick="analyzeMood()">Analyze My Mood</button>
+
+  <div id="output"></div>
+
+  <script>
+    function analyzeMood() {
+      const text = document.getElementById("moodInput").value.toLowerCase();
+      const output = document.getElementById("output");
+
+      if (!text.trim()) {
+        output.innerHTML = "<p>Please enter something for me to read 🌸</p>";
+        return;
+      }
+
+      let mood = "neutral";
+      const sadWords = ["sad", "lonely", "tired", "anxious", "angry", "hurt"];
+      const happyWords = ["happy", "excited", "joy", "love", "grateful"];
+
+      sadWords.forEach(word => { if (text.includes(word)) mood = "sad"; });
+      happyWords.forEach(word => { if (text.includes(word)) mood = "happy"; });
+
+      let response = "<p><em>Here's something for you, based on what you shared...</em></p>";
+
+      if (mood === "sad") {
+        response += `
+          <div class="suggestion">
+            🎧 <strong>Motivational pick-me-up:</strong><br>
+            <a href="https://www.youtube.com/watch?v=mgmVOuLgFB0" target="_blank">"Rise & Shine" by MotivationHub</a><br>
+            <a href="https://www.youtube.com/watch?v=4pLUleLdwY4" target="_blank">Calm Piano Playlist</a>
+          </div>
+          <p>🌿 You're not alone. You're building strength every day.</p>
+        `;
+      } else if (mood === "happy") {
+        response += `
+          <div class="suggestion">
+            😂 <strong>Comedy to match your mood:</strong><br>
+            <a href="https://www.youtube.com/watch?v=c3Jfbjwl-1o" target="_blank">Ryan Hamilton - Stand-Up</a><br>
+            <a href="https://www.youtube.com/watch?v=f6V0HNNHQK4" target="_blank">Lighthearted Comedy Clips</a>
+          </div>
+          <p>💛 Keep smiling — you're radiating warmth!</p>
+        `;
+      } else {
+        response += `
+          <div class="suggestion">
+            🎬 <strong>Feel-good stories:</strong><br>
+            <a href="https://www.youtube.com/watch?v=WjqiU5FgsYc" target="_blank">"The Present" – Short Film</a><br>
+            <a href="https://www.youtube.com/watch?v=4v1sZP5Ql6c" target="_blank">Pixar Shorts Compilation</a>
+          </div>
+          <p>🍃 Reflect and relax. Gentle moments build strong hearts.</p>
+        `;
+      }
+
+      output.innerHTML = response;
+    }
+  </script>
+</body>
+</html>
